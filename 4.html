@@ -1,0 +1,190 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>PulseMag — Online Magazine</title>
+<meta name="description" content="PulseMag — thoughtful reporting, features & culture" />
+<style>
+  :root{
+    --accent:#0b76ef; --muted:#6b7280; --card:#fff; --bg:#f4f6f8;
+    --maxw:1100px;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;font-family:Inter,system-ui,Segoe UI,Roboto,"Helvetica Neue",Arial;background:var(--bg);color:#0b1220;line-height:1.5}
+  header{background:#072a4b;color:white;padding:28px 20px}
+  .wrap{max-width:var(--maxw);margin:0 auto}
+  .brand{display:flex;gap:16px;align-items:center}
+  .brand h1{margin:0;font-size:1.4rem}
+  nav{margin-top:12px;display:flex;gap:12px;flex-wrap:wrap}
+  nav button{background:transparent;border:1px solid rgba(255,255,255,.12);color:white;padding:8px 12px;border-radius:8px;cursor:pointer}
+  main{padding:26px 20px}
+  .layout{display:grid;grid-template-columns:1fr 320px;gap:24px;max-width:var(--maxw);margin:0 auto}
+  .hero{display:flex;gap:20px;align-items:stretch;background:linear-gradient(90deg,rgba(11,118,239,.08),transparent);padding:18px;border-radius:12px}
+  .featured{flex:1;display:flex;flex-direction:column;gap:10px}
+  .featured-card{background:var(--card);padding:18px;border-radius:10px;box-shadow:0 6px 24px rgba(11,18,32,.06);display:flex;gap:14px;align-items:center}
+  .featured-card img{width:170px;height:110px;object-fit:cover;border-radius:8px}
+  .featured-meta{font-size:.95rem}
+  .featured-meta h2{margin:0;font-size:1.1rem}
+  .topics{display:flex;gap:8px;flex-wrap:wrap}
+  .topic{background:white;padding:10px;border-radius:10px;box-shadow:0 2px 8px rgba(0,0,0,.04);cursor:pointer;border:1px solid transparent}
+  .topic.active{border-color:var(--accent);box-shadow:0 6px 20px rgba(11,118,239,.06)}
+  /* article list */
+  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:18px;margin-top:22px}
+  .card{background:var(--card);padding:14px;border-radius:10px;box-shadow:0 6px 18px rgba(2,6,23,.04);display:flex;flex-direction:column;gap:10px}
+  .card img{width:100%;height:150px;object-fit:cover;border-radius:8px}
+  .meta{font-size:.85rem;color:var(--muted)}
+  .tags{display:flex;gap:6px;flex-wrap:wrap}
+  .tag{font-size:.75rem;padding:6px 8px;background:#eef5ff;color:var(--accent);border-radius:999px;cursor:pointer}
+  /* sidebar */
+  aside{position:relative}
+  .subscribe{background:linear-gradient(180deg,#fff,#f8fbff);padding:16px;border-radius:10px;box-shadow:0 6px 18px rgba(2,6,23,.04)}
+  .subscribe input{width:100%;padding:10px;border-radius:8px;border:1px solid #d1d5db;margin-top:10px}
+  .subscribe button{margin-top:10px;width:100%;padding:10px;background:var(--accent);color:white;border:none;border-radius:8px;cursor:pointer}
+  .small-list{margin-top:16px;display:flex;flex-direction:column;gap:10px}
+  .small-item{display:flex;gap:12px;align-items:center;background:white;padding:10px;border-radius:8px}
+  .small-item img{width:70px;height:50px;object-fit:cover;border-radius:6px}
+  /* footer */
+  footer{padding:24px;text-align:center;color:var(--muted);margin-top:40px}
+  /* modal article */
+  .modal{position:fixed;inset:0;background:rgba(2,6,23,.5);display:none;align-items:center;justify-content:center;padding:20px}
+  .modal.open{display:flex}
+  .article-sheet{background:white;width:100%;max-width:900px;border-radius:12px;max-height:90vh;overflow:auto;padding:20px}
+  .article-sheet h2{margin-top:0}
+  .comments{margin-top:18px}
+  .comment{background:#f8fafc;padding:12px;border-radius:8px;margin-bottom:10px}
+  .comment small{color:var(--muted)}
+  .comment-form textarea{width:100%;min-height:80px;padding:10px;border-radius:8px;border:1px solid #d1d5db}
+  .comment-form button{margin-top:8px;padding:8px 12px;background:var(--accent);color:white;border:none;border-radius:8px;cursor:pointer}
+  /* search */
+  .toolbar{display:flex;gap:12px;align-items:center;flex-wrap:wrap}
+  .search{flex:1;display:flex;gap:8px}
+  .search input{flex:1;padding:8px;border-radius:8px;border:1px solid #d1d5db}
+  /* responsive */
+  @media (max-width:900px){.layout{grid-template-columns:1fr} .hero{flex-direction:column}}
+</style>
+</head>
+<body>
+<header>
+  <div class="wrap">
+    <div class="brand">
+      <svg width="44" height="44" viewBox="0 0 24 24" fill="none" aria-hidden>
+        <rect x="1" y="1" width="22" height="22" rx="6" fill="#0b76ef"/>
+        <path d="M7 8h10M7 12h10M7 16h6" stroke="#fff" stroke-width="1.5" stroke-linecap="round"/>
+      </svg>
+      <div>
+        <h1>PulseMag</h1>
+        <div style="font-size:.9rem;color:#cfe8ff">features • analysis • culture</div>
+      </div>
+    </div>
+
+    <nav style="margin-top:12px">
+      <div style="display:flex;gap:8px;flex-wrap:wrap">
+        <button onclick="filterBy('All')">All</button>
+        <button onclick="filterBy('Tech')">Tech</button>
+        <button onclick="filterBy('Politics')">Politics</button>
+        <button onclick="filterBy('Lifestyle')">Lifestyle</button>
+        <button onclick="filterBy('Culture')">Culture</button>
+      </div>
+    </nav>
+  </div>
+</header>
+
+<main>
+  <div class="layout">
+    <section>
+      <div class="wrap">
+        <div class="hero">
+          <div class="featured" id="featuredContainer">
+            <!-- Featured carousel (JS fills) -->
+          </div>
+
+          <div style="width:260px">
+            <div style="font-weight:600">Trending Topics</div>
+            <div class="topics" id="topics">
+              <!-- JS fills topics -->
+            </div>
+            <div style="height:12px"></div>
+            <div class="subscribe" aria-label="Newsletter">
+              <strong>Subscribe to PulseMag</strong>
+              <p style="margin:6px 0;color:var(--muted)">Weekly digest — curated stories & insights</p>
+              <input id="emailInput" type="email" placeholder="you@domain.com" aria-label="email">
+              <button id="subscribeBtn">Subscribe</button>
+              <p id="subMsg" style="margin:8px 0;color:green;font-size:.95rem"></p>
+            </div>
+          </div>
+        </div>
+
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-top:18px">
+          <div class="toolbar">
+            <div style="font-weight:600">Latest Articles</div>
+            <div style="color:var(--muted);font-size:.95rem;margin-left:8px">— curated by editors</div>
+          </div>
+
+          <div class="search">
+            <input id="search" placeholder="Search articles, tags or authors…" aria-label="Search">
+            <button onclick="doSearch()">Search</button>
+          </div>
+        </div>
+
+        <div id="articles" class="grid" aria-live="polite">
+          <!-- JS inserts article cards -->
+        </div>
+      </div>
+    </section>
+
+    <aside>
+      <div class="wrap">
+        <div class="small-list">
+          <div style="font-weight:700">Featured Reads</div>
+          <div id="smallList">
+            <!-- JS inserts small items -->
+          </div>
+
+          <div style="margin-top:18px" class="subscribe">
+            <strong>Become a Member</strong>
+            <p style="margin:8px 0;color:var(--muted)">Support independent journalism — member perks coming soon.</p>
+            <button onclick="alert('Member registration is a demo — integrate a payments backend to enable memberships')">Join (Demo)</button>
+          </div>
+        </div>
+      </div>
+    </aside>
+  </div>
+</main>
+
+<!-- Article Modal -->
+<div id="modal" class="modal" role="dialog" aria-modal="true" aria-hidden="true">
+  <div class="article-sheet" role="document" id="articleSheet">
+    <button onclick="closeModal()" style="float:right;border:none;background:transparent;font-size:18px;cursor:pointer">✕</button>
+    <div id="articleContent"></div>
+    <div class="comments">
+      <h3>Comments</h3>
+      <div id="commentList"></div>
+
+      <div class="comment-form">
+        <input id="commentName" placeholder="Your name" style="width:100%;padding:8px;border-radius:8px;border:1px solid #d1d5db">
+        <textarea id="commentText" placeholder="Write a thoughtful comment…"></textarea>
+        <button id="postComment">Post Comment</button>
+        <p id="commentMsg" style="color:green"></p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<footer>
+  <div class="wrap">
+    <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap">
+      <div style="color:var(--muted)">© 2025 PulseMag — independent stories & analysis</div>
+      <div style="color:var(--muted)">Privacy • Terms • Contact</div>
+    </div>
+  </div>
+</footer>
+
+<script>
+/* --- Sample data (replace with real content from backend) --- */
+const ARTICLES = [
+  { id:1, title:"AI & The New Creative Economy", excerpt:"How generative models are remixing work, copyright and culture.", img:"https://images.unsplash.com/photo-1504384308090-c894fdcc538d?w=900", category:"Tech", tags:["AI","Creativity"], author:"Neha R.", date:"Dec 1, 2025", body:<p>Generative AI is reshaping creative fields ...</p><p>Longer feature text goes here.</p> },
+  { id:2, title:"City Council Elections: What Changed", excerpt:"A deep dive into voter turnout and policy shifts this season.", img:"https://images.unsplash.com/photo-1554224154-22dec7ec8818?w=900", category:"Politics", tags:["Elections","Policy"], author:"Arjun V.", date:"Nov 28, 2025", body:<p>The local elections revealed new trends ...</p> },
+  { id:3, title:"Slow Travel: A Guide to Meaningful Trips", excerpt:"Why doing less can sometimes mean seeing more.", img:"https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=900", category:"Lifestyle", tags:["Travel","Wellbeing"], author:"Maya P.", date:"Nov 24, 2025", body:<p>Slow travel is about taking time ...</p> },
+  { id:4, title:"Reviving Vinyl: The Return of Analog Sound", excerpt:"How records found their way back into the mainstream.", img:"https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?w=900", category:"Culture", tags:["Music","Retro"], author:"Ravi K.", date:"Nov 20, 2025", body:<p>Vinyl sales have been steadily increasing ...</p> },
+  { id:5, title:"Green Tech Startups to Watch", excerpt:"Innovations merging climate & entrepreneurship.", img:"https://images.unsplash.com/photo-1509395176047-4a66953fd231?w=900", category:"Tech", tags:["Climate","Startups"], author:"Neha R.", date:"Nov 16, 2025", body:`<p>These
